@@ -1,0 +1,14 @@
+server:
+  port: 8181
+#  servlet:
+#    context-path: /student
+spring:
+  application:
+    name: student
+  datasource:
+    url: jdbc:postgresql://localhost:5432/student
+    username: admin
+    password: my-password
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: classpath:db.logfile/master_log.yml
