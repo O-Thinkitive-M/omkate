@@ -30,12 +30,8 @@ public class StudentServiceImpl implements StudentService {
                 .retrieve()
                 .bodyToMono(Long.class);
        response.subscribe(value ->{
-           if(value>0)
-           {
-               System.out.println(value);
                student.setLibraryid(value);
                studentRepo.save(student);
-           }
        });
         return "Done..!";
     }
