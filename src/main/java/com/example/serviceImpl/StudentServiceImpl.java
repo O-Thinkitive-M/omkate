@@ -2,6 +2,7 @@ package com.example.serviceImpl;
 import com.example.entity.Account;
 import com.example.entity.Library;
 import com.example.entity.Student;
+import com.example.exception.ResourceNotFoundException;
 import com.example.repo.StudentRepo;
 import com.example.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.List;
 @Service
 public class StudentServiceImpl implements StudentService {
 
-     private static final String LIBRARY_SERVICE="http://localhost:7777/library";
+     private static final String LIBRARY_SERVICE="http://localhost:7771/library";
      private static final String ACCOUNT_SERVICE="http://localhost:9899/account";
 
     @Autowired
@@ -24,7 +25,6 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public String createStudent(Student student) {
-
         Mono<Long> response=webClient.post().uri(LIBRARY_SERVICE+"/create")
                 .body(Mono.just(student.getLibrary()), Library.class)
                 .retrieve()
@@ -37,7 +37,7 @@ public class StudentServiceImpl implements StudentService {
     }
     @Override
     public Student getSingleStudent(Long id) {
-        Student s=studentRepo.findById(id).get();
+        Student s=studentRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("Student With This ID Not Present: "+id));
         Library li= getLibrary(s.getLibraryid());
             s.setLibrary(li);
         return s;
